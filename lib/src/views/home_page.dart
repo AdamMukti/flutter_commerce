@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_commerce/src/components/product_card.dart';
 import 'package:flutter_commerce/src/utility/theme_color.dart';
 import 'package:flutter_commerce/src/utility/theme_text.dart';
 
@@ -77,6 +78,22 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: 16,
           ),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Expanded(
+                child: GridView.builder(
+                  itemCount: 4,
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: .8,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemBuilder: (context, index) => const ProductCard(),
+                ),
+              ),
+            )
         ],
       ),
     ));
