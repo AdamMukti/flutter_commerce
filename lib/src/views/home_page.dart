@@ -16,10 +16,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late List<ProductModel>? _productModel = [];
   late List<ProductModel>? _filteredProductModel = [];
+  late List<String>? _categoriesModel = [];
+  String selectedCategories = '';
   @override
   void initState() {
     super.initState();
     _getData();
+    _getCategories();
   }
 
   void _getData([String? query]) async {
@@ -33,6 +36,14 @@ class _HomePageState extends State<HomePage> {
       (value) => setState(() {
         _productModel = _filteredProductModel;
       }),
+    );
+  }
+
+  void _getCategories() async {
+    _categoriesModel = (await ApiService().getCategories());
+
+    Future.delayed(const Duration(seconds: 1)).then(
+      (value) => setState(() {}),
     );
   }
 
@@ -109,7 +120,37 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  // ProductCard(),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: List<Widget>.generate(
+                          _categoriesModel!.length,
+                          (int index) {
+                            return FilterChip(
+                              label: Text(_categoriesModel![index]),
+                              selected: selectedCategories ==
+                                  _categoriesModel![index],
+                              onSelected: (bool selected) {
+                                setState(() {
+                                  if (selected) {
+                                    selectedCategories =
+                                        _categoriesModel![index];
+                                  } else {
+                                    selectedCategories = '';
+                                  }
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     height: 16,
                   ),
