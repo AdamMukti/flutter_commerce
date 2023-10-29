@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_commerce/core/model/product_model.dart';
 import 'package:flutter_commerce/core/service/api_service.dart';
-// import 'package:flutter_commerce/src/components/product_card.dart';
 import 'package:flutter_commerce/src/utility/theme_color.dart';
 import 'package:flutter_commerce/src/utility/theme_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  static TextEditingController _searchController = TextEditingController();
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -14,17 +15,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late List<ProductModel>? _productModel = [];
+  late List<ProductModel>? _filteredProductModel = [];
   @override
   void initState() {
     super.initState();
     _getData();
   }
 
-  void _getData() async {
-    _productModel = (await ApiService().getUsers());
-    // print("TES NIH");
-    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
-    print(_productModel);
+  void _getData([String? query]) async {
+    if (query?.isNotEmpty == true) {
+      _filteredProductModel = (await ApiService().searchProducts(query!));
+    } else {
+      _filteredProductModel = (await ApiService().getProducts());
+    }
+
+    Future.delayed(const Duration(seconds: 1)).then(
+      (value) => setState(() {
+        _productModel = _filteredProductModel;
+      }),
+    );
   }
 
   @override
@@ -67,8 +76,8 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       child: TextField(
-                        // onChanged: (value) => _runFilter(value),
-                        // controller: ListMahasiswa.searchBar,
+                        onSubmitted: (value) => _getData(value),
+                        controller: HomePage._searchController,
                         decoration: InputDecoration(
                           hintText: 'Search',
                           hintStyle: textMuted.copyWith(fontSize: 14),
