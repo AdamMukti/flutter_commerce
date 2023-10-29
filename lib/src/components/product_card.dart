@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_commerce/src/utility/theme_text.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
-
+  const ProductCard({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(

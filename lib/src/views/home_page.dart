@@ -32,6 +32,12 @@ class _HomePageState extends State<HomePage> {
       _filteredProductModel = (await ApiService().getProducts());
     }
 
+    if (selectedCategories.isNotEmpty) {
+      print(selectedCategories);
+      _filteredProductModel = (await ApiService().getProductsByCategory(selectedCategories));
+      // _filteredProductModel = (await ApiService().getProducts());
+    }
+
     Future.delayed(const Duration(seconds: 1)).then(
       (value) => setState(() {
         _productModel = _filteredProductModel;
@@ -137,6 +143,7 @@ class _HomePageState extends State<HomePage> {
                                   _categoriesModel![index],
                               onSelected: (bool selected) {
                                 setState(() {
+                                  _getData();
                                   if (selected) {
                                     selectedCategories =
                                         _categoriesModel![index];
